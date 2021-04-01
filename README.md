@@ -1,5 +1,5 @@
 ## To start in development server
-- `expo start`
+`expo start`
 
 ## Stack
 - React Native / Expo
