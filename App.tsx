@@ -1,19 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Button, Image, StyleSheet, Text, View } from 'react-native';
-import AppLoading from 'expo-app-loading';
 import {
-  useFonts,
-  PlayfairDisplay_700Bold,
-} from '@expo-google-fonts/playfair-display';
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 export default function App() {
-  let [fontsLoaded] = useFonts({
-    PlayfairDisplay_700Bold,
-  });
-  // if (!fontsLoaded) {
-  //   return <AppLoading />;
-  // }
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
@@ -22,12 +18,13 @@ export default function App() {
         style={styles.homeImage}
         source={require('./assets/PetFilesImage.png')}
       />
-      <Button
+      <TouchableOpacity
         onPress={() => {}}
-        title="Register"
-        color="#6223c7"
+        style={styles.button}
         accessibilityLabel="Register"
-      />
+      >
+        <Text style={styles.buttonText}>Register</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -40,13 +37,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   heading: {
-    fontSize: 30,
-    fontFamily: 'PlayfairDisplay_700Bold',
+    fontSize: 40,
+    fontFamily: Platform.OS === 'ios' ? 'Cochin' : 'serif',
   },
   homeImage: {
     width: '90%',
     height: '50%',
     resizeMode: 'contain',
   },
-  buttonStyle: {},
+  button: {
+    backgroundColor: '#4828ff',
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    marginTop: Platform.OS === 'web' ? '12px' : '',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    textAlign: 'center',
+  },
 });
