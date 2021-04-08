@@ -1,15 +1,9 @@
 import * as React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import {
-  Image,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Image, Platform, StyleSheet, Text, View } from 'react-native';
+import { Button } from 'react-native-paper';
 
-export default function GreetScreen() {
+const HomeScreen = ({ navigation }) => {
   const registered = false;
   return (
     <View style={styles.container}>
@@ -19,20 +13,18 @@ export default function GreetScreen() {
         style={styles.homeImage}
         source={require('./assets/PetFilesImage.png')}
       />
-      <TouchableOpacity
-        onPress={() => {
-          console.log('abd');
-        }}
+      <Button
+        mode="contained"
         style={styles.button}
-        accessibilityLabel={registered ? 'Register' : 'Enter'}
+        labelStyle={styles.buttonText}
+        contentStyle={styles.buttonBody}
+        onPress={() => navigation.navigate('Animals')}
       >
-        <Text style={styles.buttonText}>
-          {registered ? 'Register' : 'Enter'}
-        </Text>
-      </TouchableOpacity>
+        {registered ? 'Register' : 'Enter'}
+      </Button>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -52,14 +44,15 @@ const styles = StyleSheet.create({
   },
   button: {
     width: 250,
-    backgroundColor: '#4828ff',
-    paddingVertical: 12,
-    paddingHorizontal: 18,
     marginTop: Platform.OS === 'web' ? 12 : 0,
   },
+  buttonBody: {
+    paddingVertical: 6,
+    paddingHorizontal: 18,
+  },
   buttonText: {
-    color: '#fff',
     fontSize: 18,
     textAlign: 'center',
   },
 });
+export default HomeScreen;
