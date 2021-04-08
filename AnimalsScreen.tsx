@@ -11,6 +11,7 @@ const AnimalsScreen = () => {
         <Text style={styles.heading}>My Pets</Text>
         <Button
           mode="contained"
+          icon="plus"
           style={styles.button}
           labelStyle={styles.buttonText}
           onPress={() => {}}

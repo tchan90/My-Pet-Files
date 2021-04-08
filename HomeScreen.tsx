@@ -15,6 +15,7 @@ const HomeScreen = ({ navigation }) => {
       />
       <Button
         mode="contained"
+        icon="call-made"
         style={styles.button}
         labelStyle={styles.buttonText}
         contentStyle={styles.buttonBody}
