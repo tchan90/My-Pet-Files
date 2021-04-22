@@ -4,14 +4,14 @@ import { Image, Platform, StyleSheet, Text, View } from 'react-native';
 import { Button } from 'react-native-paper';
 
 const HomeScreen = ({ navigation }) => {
-  const registered = false;
+  const registered = false; // TODO: function to detect if user registered or not
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
       <Text style={styles.heading}>My Pet Files</Text>
       <Image
         style={styles.homeImage}
-        source={require('./assets/PetFilesImage.png')}
+        source={require('../assets/PetFilesImage.png')}
       />
       <Button
         mode="contained"
