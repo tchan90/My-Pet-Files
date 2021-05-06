@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Image, Platform, StyleSheet, Text, View } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Image, Platform, StyleSheet, View } from 'react-native';
+import { Button, Text } from 'react-native-paper';
 
 const HomeScreen = ({ navigation }) => {
   const registered = false; // TODO: function to detect if user registered or not

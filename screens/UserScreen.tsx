@@ -2,8 +2,8 @@ import * as React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet } from 'react-native';
 
-import { Platform, Text, View } from 'react-native';
-import { Button, Headline, Surface, Title } from 'react-native-paper';
+import { Platform, View } from 'react-native';
+import { Button, Headline, Surface, Text, Title } from 'react-native-paper';
 
 export default function UserScreen() {
   return (
@@ -24,14 +24,12 @@ export default function UserScreen() {
       <View style={styles.detailsContainer}>
         <Surface style={styles.detailsSurface}>
           <Title style={styles.detailsTitle}>Owner</Title>
-          <Text style={styles.detailsText}>Cruella De Ville</Text>
+          <Text style={styles.detailsText}>Eleanor Abernathy</Text>
         </Surface>
 
         <Surface style={styles.detailsSurface}>
           <Title style={styles.detailsTitle}>Address</Title>
-          <Text style={styles.detailsText}>De Vil Manor</Text>
-          <Text style={styles.detailsText}>SpotVille</Text>
-          <Text style={styles.detailsText}>4567, CA</Text>
+          <Text style={styles.detailsText}>111 Cat Road, Whiskers Hills</Text>
         </Surface>
 
         <Surface style={styles.detailsSurface}>
@@ -41,7 +39,7 @@ export default function UserScreen() {
 
         <Surface style={styles.detailsSurface}>
           <Title style={styles.detailsTitle}>Vet Clinic</Title>
-          <Text style={styles.detailsText}>Dalmation Clinic</Text>
+          <Text style={styles.detailsText}>Fluffy Clinic</Text>
           <Text style={styles.detailsText}>SpotVille</Text>
           <Text style={styles.detailsText}>4567, CA</Text>
         </Surface>
