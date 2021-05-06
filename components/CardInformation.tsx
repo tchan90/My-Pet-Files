@@ -5,6 +5,7 @@ import { Avatar, Card, Divider } from 'react-native-paper';
 
 import SimpleInformation from '../components/SimpleInformation';
 import ListInformation from '../components/ListInformation';
+import DotInformation from '../components/DotInformation';
 
 const CardInformation = ({
   data,
@@ -32,7 +33,11 @@ const CardInformation = ({
           })}
         {type === 'list' &&
           data.map((content: Object) => {
-            return <ListInformation content={content} />;
+            return <ListInformation content={content} title={title} />;
+          })}
+        {type === 'dot' &&
+          data.map((content: Object) => {
+            return <DotInformation content={content} />;
           })}
       </Card.Content>
     </Card>

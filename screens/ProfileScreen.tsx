@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 
 import { View } from 'react-native';
 import { Appbar, Menu } from 'react-native-paper';
@@ -33,7 +33,49 @@ const ProfileScreen = ({ navigation }) => {
         brand: 'Royal Canin',
       },
     ],
+    drugs: {
+      parasiteControl: [
+        {
+          name: 'Advocate',
+          dose: 'Once a month',
+          action: 'Through skin',
+        },
+      ],
+      medication: [
+        {
+          name: 'Antibiotics',
+          dose: 'Three times a day for 14 days',
+          action: 'Orally',
+        },
+      ],
+    },
+    notes: [
+      'Needs training',
+      'Will play and scratch bite',
+      'History of cat flu at the shelter',
+    ],
+    image: '',
   };
+
+  const { general, diet, drugs, notes, image } = dummyInfo;
+
+  const listViewData = [
+    {
+      title: 'Diet',
+      icon: 'food-steak',
+      data: diet,
+    },
+    {
+      title: 'Parasite Control',
+      icon: 'spider',
+      data: drugs.parasiteControl,
+    },
+    {
+      title: 'Medication',
+      icon: 'pill',
+      data: drugs.medication,
+    },
+  ];
 
   return (
     <>
@@ -57,20 +99,30 @@ const ProfileScreen = ({ navigation }) => {
           <Menu.Item onPress={() => {}} title="Delete" icon="trash-can" />
         </Menu>
       </Appbar.Header>
-      <View style={styles.container}>
-        <CardInformation
-          title="General Information"
-          icon="cat"
-          data={dummyInfo.general}
-          type="simple"
-        />
-        <CardInformation
-          title="Diet"
-          icon="food-steak"
-          data={dummyInfo.diet}
-          type="list"
-        />
-      </View>
+      <ScrollView>
+        <View style={styles.container}>
+          <CardInformation
+            title="General Information"
+            icon="cat"
+            data={general}
+            type="simple"
+          />
+          {listViewData.map((listData) => (
+            <CardInformation
+              title={listData.title}
+              icon={listData.icon}
+              data={listData.data}
+              type="list"
+            />
+          ))}
+          <CardInformation
+            title="Notes"
+            icon="note-text-outline"
+            data={notes}
+            type="dot"
+          />
+        </View>
+      </ScrollView>
     </>
   );
 };

@@ -6,19 +6,42 @@ import { Text } from 'react-native-paper';
 
 import capitilize from '../utils/capitlize';
 
-interface ListType {
+interface FoodType {
   brand: string;
   duration: string;
   type: string;
 }
 
-const ListInformation = ({ content }) => {
-  const { brand, duration, type }: ListType = content;
+interface MedicationType {
+  name: string;
+  dose: string;
+  action: string;
+}
+
+const ListInformation = ({
+  content,
+  title,
+}: {
+  content: object;
+  title: string;
+}) => {
+  if (title === 'Diet') {
+    const { brand, duration, type }: FoodType = content;
+    return (
+      <View style={styles.container}>
+        <Text style={styles.type}>{capitilize(type)}</Text>
+        <Text style={styles.information}>Brand: {capitilize(brand)}</Text>
+        <Text style={styles.information}>Duration: {capitilize(duration)}</Text>
+      </View>
+    );
+  }
+
+  const { name, dose, action }: MedicationType = content;
   return (
     <View style={styles.container}>
-      <Text style={styles.type}>{capitilize(type)}</Text>
-      <Text style={styles.information}>Brand: {capitilize(brand)}</Text>
-      <Text style={styles.information}>Duration: {capitilize(duration)}</Text>
+      <Text style={styles.type}>{capitilize(name)}</Text>
+      <Text style={styles.information}>Dose: {capitilize(dose)}</Text>
+      <Text style={styles.information}>How: {capitilize(action)}</Text>
     </View>
   );
 };
