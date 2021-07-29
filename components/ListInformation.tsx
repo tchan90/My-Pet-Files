@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, { FC } from 'react';
+
 import { StyleSheet } from 'react-native';
 
 import { View } from 'react-native';
@@ -18,13 +19,12 @@ interface MedicationType {
   action: string;
 }
 
-const ListInformation = ({
-  content,
-  title,
-}: {
+interface InfoType {
   content: object;
   title: string;
-}) => {
+}
+
+const ListInformation: FC<InfoType> = ({ content, title }) => {
   if (title === 'Diet') {
     const { brand, duration, type }: FoodType = content;
     return (

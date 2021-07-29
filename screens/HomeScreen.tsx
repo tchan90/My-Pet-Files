@@ -19,10 +19,20 @@ const HomeScreen = ({ navigation }) => {
         style={styles.button}
         labelStyle={styles.buttonText}
         contentStyle={styles.buttonBody}
+        onPress={() => {}}
+      >
+        Login
+      </Button>
+      {/* <Button
+        mode="contained"
+        icon="call-made"
+        style={styles.button}
+        labelStyle={styles.buttonText}
+        contentStyle={styles.buttonBody}
         onPress={() => navigation.navigate('Animals')}
       >
         {registered ? 'Register' : 'Enter'}
-      </Button>
+      </Button> */}
     </View>
   );
 };

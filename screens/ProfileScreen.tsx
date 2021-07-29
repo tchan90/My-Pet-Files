@@ -9,7 +9,6 @@ import CardInformation from '../components/CardInformation';
 
 const ProfileScreen = ({ navigation }) => {
   const [visible, setVisible] = React.useState(false);
-
   const _goBack = () => navigation.goBack();
   const _handleMore = () => setVisible(!visible);
   const _closeMenu = () => setVisible(!visible);
@@ -58,7 +57,6 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   const { general, diet, drugs, notes, image } = dummyInfo;
-
   const listViewData = [
     {
       title: 'Diet',
@@ -107,8 +105,9 @@ const ProfileScreen = ({ navigation }) => {
             data={general}
             type="simple"
           />
-          {listViewData.map((listData) => (
+          {listViewData.map((listData, key) => (
             <CardInformation
+              key={key}
               title={listData.title}
               icon={listData.icon}
               data={listData.data}

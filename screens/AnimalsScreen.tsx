@@ -1,9 +1,14 @@
 import * as React from 'react';
+import AppContext from '../AppContext';
 import { StatusBar } from 'expo-status-bar';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import { Avatar, Button, List } from 'react-native-paper';
 
 const AnimalsScreen = ({ navigation }) => {
+  const data = React.useContext(AppContext);
+  const pets = data.pets;
+  console.log('pets', pets);
+
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
@@ -20,51 +25,30 @@ const AnimalsScreen = ({ navigation }) => {
         </Button>
       </View>
       <List.Section>
-        <List.Item
-          title="Muttons"
-          titleStyle={styles.listItem}
-          left={(props) => (
-            <Avatar.Image
-              size={45}
-              source={require('../assets/cat-avatar.jpeg')}
-            />
-          )}
-          right={(props) => (
-            <Button
-              mode="outlined"
-              style={styles.buttonList}
-              contentStyle={styles.buttonListContentStyle}
-              labelStyle={styles.buttonListText}
-              onPress={() => navigation.navigate('Profile')}
-            >
-              View
-            </Button>
-          )}
-        />
-
-        <List.Item
-          title="Jericho"
-          titleStyle={styles.listItem}
-          left={(props) => (
-            <Avatar.Image
-              size={45}
-              source={require('../assets/dog-avatar.jpeg')}
-            />
-          )}
-          right={(props) => (
-            <Button
-              mode="outlined"
-              style={styles.buttonList}
-              contentStyle={styles.buttonListContentStyle}
-              labelStyle={styles.buttonListText}
-              onPress={() => {
-                navigation.navigate('Profile');
-              }}
-            >
-              View
-            </Button>
-          )}
-        />
+        {pets.map((pet, i) => (
+          <List.Item
+            key={i}
+            title={pet.name}
+            titleStyle={styles.listItem}
+            left={(props) => (
+              <Avatar.Image
+                size={45}
+                source={require('../assets/cat-avatar.jpeg')}
+              />
+            )}
+            right={(props) => (
+              <Button
+                mode="outlined"
+                style={styles.buttonList}
+                contentStyle={styles.buttonListContentStyle}
+                labelStyle={styles.buttonListText}
+                onPress={() => navigation.navigate('Profile')}
+              >
+                View
+              </Button>
+            )}
+          />
+        ))}
       </List.Section>
     </View>
   );
