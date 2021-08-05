@@ -6,8 +6,8 @@ import { Avatar, Button, List } from 'react-native-paper';
 
 const AnimalsScreen = ({ navigation }) => {
   const data = React.useContext(AppContext);
-  const pets = data.pets;
-  console.log('pets', pets);
+  const { pets } = data;
+  console.log(pets);
 
   return (
     <View style={styles.container}>
@@ -25,9 +25,9 @@ const AnimalsScreen = ({ navigation }) => {
         </Button>
       </View>
       <List.Section>
-        {pets.map((pet, i) => (
+        {pets.map((pet) => (
           <List.Item
-            key={i}
+            key={pet.id}
             title={pet.name}
             titleStyle={styles.listItem}
             left={(props) => (
@@ -42,7 +42,7 @@ const AnimalsScreen = ({ navigation }) => {
                 style={styles.buttonList}
                 contentStyle={styles.buttonListContentStyle}
                 labelStyle={styles.buttonListText}
-                onPress={() => navigation.navigate('Profile')}
+                onPress={() => navigation.navigate('Profile', { id: pet.id })}
               >
                 View
               </Button>

@@ -1,17 +1,21 @@
 import * as React from 'react';
+import 'firebase/firestore';
+import { db } from './configs/firebase';
+
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, ScrollView } from 'react-native';
-
 import { View } from 'react-native';
 import { Appbar, Menu } from 'react-native-paper';
 
 import CardInformation from '../components/CardInformation';
 
-const ProfileScreen = ({ navigation }) => {
+const ProfileScreen = ({ route, navigation }) => {
   const [visible, setVisible] = React.useState(false);
   const _goBack = () => navigation.goBack();
   const _handleMore = () => setVisible(!visible);
   const _closeMenu = () => setVisible(!visible);
+  // const { id } = route.params;
+  const id = route.id;
 
   const dummyInfo = {
     general: {
