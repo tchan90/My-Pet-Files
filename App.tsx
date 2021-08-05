@@ -1,6 +1,6 @@
 import * as React from 'react';
-import firebase from 'firebase/app';
 import 'firebase/firestore';
+import { db } from './configs/firebase';
 
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
@@ -24,26 +24,10 @@ const theme = {
 
 const Stack = createStackNavigator();
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyDxhMggLaQEYwF8yhNcK6o-9LOCFeP4jSs',
-  authDomain: 'pet-files.firebaseapp.com',
-  projectId: 'pet-files',
-  storageBucket: 'pet-files.appspot.com',
-  messagingSenderId: '895132736631',
-  appId: '1:895132736631:web:45518e861858f035547a72',
-  measurementId: 'G-T9HZF1YRPK',
-};
-
-if (firebase.apps.length === 0) {
-  firebase.initializeApp(firebaseConfig);
-}
-
 const App = () => {
   const [ownerData, setOwnerData] = React.useState({});
   const [petsData, setPetsData] = React.useState([]);
   const [vetData, setVetData] = React.useState({});
-
-  const db = firebase.firestore();
 
   const getVetData = async (clinic: String) => {
     await db
@@ -56,7 +40,7 @@ const App = () => {
           const res = doc.data();
           setVetData(res);
         } else {
-          console.log('No document exists');
+          console.log('No vet document exists');
         }
       })
       .catch((err) => {
@@ -73,12 +57,14 @@ const App = () => {
         querySnapshot.forEach((doc) => {
           // doc.data() is never undefined for query doc snapshots
           const res = doc.data();
-          petsArray.push(res);
+          const id = doc.id;
+          const petObj = { ...res, id };
+          petsArray.push(petObj);
         });
         setPetsData(petsArray);
       })
       .catch((error) => {
-        console.log('Error getting documents: ', error);
+        console.log('Error getting pet documents: ', error);
       });
   };
 
@@ -100,19 +86,17 @@ const App = () => {
             getPetData(ownerID);
           }
         } else {
-          console.log('No document exists');
+          console.log('No owner document exists');
         }
       })
       .catch((err) => {
-        console.error('Error getting document', err);
+        console.error('Error getting owner document', err);
       });
   };
 
   React.useEffect(() => {
     getData();
   }, []);
-
-  // console.log('petsData', petsData);
 
   const hasOpened = true; // TODO: function to detect that user has app running in bg or not
   if (!hasOpened) {
