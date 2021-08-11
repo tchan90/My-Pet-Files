@@ -4,4 +4,4 @@
 ## Stack
 - React Native / Expo
 - React Native Paper (UI)
-- Realm (database)
+- Firestore
