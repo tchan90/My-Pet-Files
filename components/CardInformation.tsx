@@ -15,7 +15,6 @@ interface CardType {
 }
 
 const CardInformation: FC<CardType> = ({ data, icon, title, type }) => {
-  console.log(data);
   if (data[0] !== null) {
     return (
       <Card elevation={2} style={styles.generalInformation}>

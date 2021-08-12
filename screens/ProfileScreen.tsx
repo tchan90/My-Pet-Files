@@ -1,5 +1,7 @@
 import * as React from 'react';
 import 'firebase/firestore';
+import { format } from 'date-fns';
+
 import { db } from '../configs/firebase';
 import AppContext from '../AppContext';
 
@@ -30,7 +32,12 @@ const ProfileScreen = ({ route, navigation }) => {
       .then((doc) => {
         if (doc.exists) {
           const res = doc.data();
-          setPetData(res);
+          const generalInfo = {
+            Name: res.name,
+            'Date of birth': format(new Date(res.dob), 'dd/MM/yyyy'),
+            Owner: owner ? `${owner.firstName} ${owner.lastName}` : '',
+          };
+          setPetData(generalInfo);
         } else {
           console.log('No pet document exists');
         }
@@ -157,12 +164,6 @@ const ProfileScreen = ({ route, navigation }) => {
     },
   ];
 
-  const generalInfo = {
-    Name: petData.name,
-    'Date of birth': petData.dob,
-    Owner: `${owner.firstName} ${owner.lastName}`,
-  };
-
   return (
     <>
       <StatusBar style="light" />
@@ -190,7 +191,7 @@ const ProfileScreen = ({ route, navigation }) => {
           <CardInformation
             title="General Information"
             icon="cat"
-            data={generalInfo}
+            data={petData}
             type="simple"
           />
           {listViewData.map((listData, key) => (
