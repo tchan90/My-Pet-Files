@@ -1,6 +1,7 @@
 import * as React from 'react';
 import 'firebase/firestore';
-import { db } from './configs/firebase';
+import { db } from '../configs/firebase';
+import AppContext from '../AppContext';
 
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, ScrollView } from 'react-native';
@@ -10,12 +11,76 @@ import { Appbar, Menu } from 'react-native-paper';
 import CardInformation from '../components/CardInformation';
 
 const ProfileScreen = ({ route, navigation }) => {
+  const data = React.useContext(AppContext);
+  const { owner } = data;
+
   const [visible, setVisible] = React.useState(false);
+  const [petData, setPetData] = React.useState({});
+  const [dietData, setDietData] = React.useState([]);
+  const [drugData, setDrugData] = React.useState([]);
   const _goBack = () => navigation.goBack();
   const _handleMore = () => setVisible(!visible);
   const _closeMenu = () => setVisible(!visible);
-  // const { id } = route.params;
-  const id = route.id;
+  const { id, animal } = route.params;
+
+  const getPetData = async () => {
+    db.collection('animals')
+      .doc(id)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          const res = doc.data();
+          setPetData(res);
+        } else {
+          console.log('No pet document exists');
+        }
+      })
+      .catch((err) => {
+        console.error('Error getting pet document', err);
+      });
+  };
+
+  const getDietData = async () => {
+    const dietArray: any = [];
+    db.collection('diet')
+      .where('animal', '==', `${id}`)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          const res = doc.data();
+          dietArray.push(res);
+          setDietData(dietArray);
+        });
+      })
+      .catch((error) => {
+        console.log('Error getting diet documents: ', error);
+      });
+  };
+
+  const getDrugData = async () => {
+    const drugArray: any = [];
+    db.collection('drugs')
+      .where('animal', '==', `${id}`)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          const res = doc.data();
+          drugArray.push(res);
+          setDrugData(drugArray);
+        });
+      })
+      .catch((error) => {
+        console.log('Error getting drug documents: ', error);
+      });
+  };
+
+  React.useEffect(() => {
+    getPetData();
+    getDietData();
+    getDrugData();
+  }, []);
 
   const dummyInfo = {
     general: {
@@ -60,31 +125,50 @@ const ProfileScreen = ({ route, navigation }) => {
     image: '',
   };
 
-  const { general, diet, drugs, notes, image } = dummyInfo;
+  const parasiteMeds = drugData.map((drug) => {
+    if (drug.parasiteControl) {
+      return drug;
+    }
+    return null;
+  });
+
+  const medication = drugData.map((med) => {
+    if (med.medication) {
+      return med;
+    }
+    return null;
+  });
+
   const listViewData = [
     {
       title: 'Diet',
       icon: 'food-steak',
-      data: diet,
+      data: dietData || [],
     },
     {
       title: 'Parasite Control',
       icon: 'spider',
-      data: drugs.parasiteControl,
+      data: parasiteMeds,
     },
     {
       title: 'Medication',
       icon: 'pill',
-      data: drugs.medication,
+      data: medication,
     },
   ];
+
+  const generalInfo = {
+    Name: petData.name,
+    'Date of birth': petData.dob,
+    Owner: `${owner.firstName} ${owner.lastName}`,
+  };
 
   return (
     <>
       <StatusBar style="light" />
       <Appbar.Header>
         <Appbar.BackAction onPress={_goBack} />
-        <Appbar.Content title="Muttons" />
+        <Appbar.Content title={animal} />
         <Menu
           visible={visible}
           onDismiss={_closeMenu}
@@ -106,7 +190,7 @@ const ProfileScreen = ({ route, navigation }) => {
           <CardInformation
             title="General Information"
             icon="cat"
-            data={general}
+            data={generalInfo}
             type="simple"
           />
           {listViewData.map((listData, key) => (
@@ -118,12 +202,12 @@ const ProfileScreen = ({ route, navigation }) => {
               type="list"
             />
           ))}
-          <CardInformation
+          {/* <CardInformation
             title="Notes"
             icon="note-text-outline"
             data={notes}
             type="dot"
-          />
+          /> */}
         </View>
       </ScrollView>
     </>

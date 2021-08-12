@@ -35,34 +35,38 @@ export default function UserScreen() {
           </Button>
         </View>
         <View style={styles.detailsContainer}>
-          <Surface style={styles.detailsSurface}>
-            <Title style={styles.detailsTitle}>Owner</Title>
-            <Text style={styles.detailsText}>
-              {owner.firstName} {owner.lastName}
-            </Text>
-          </Surface>
+          {Object.keys(owner).length !== 0 && (
+            <>
+              <Surface style={styles.detailsSurface}>
+                <Title style={styles.detailsTitle}>Owner</Title>
+                <Text style={styles.detailsText}>
+                  {owner.firstName} {owner.lastName}
+                </Text>
+              </Surface>
+              <Surface style={styles.detailsSurface}>
+                <Title style={styles.detailsTitle}>Address</Title>
+                <Text style={styles.detailsText}>
+                  {owner.street}, {owner.suburb}
+                </Text>
+                <Text style={styles.detailsText}>{owner.countryCode}</Text>
+              </Surface>
+              <Surface style={styles.detailsSurface}>
+                <Title style={styles.detailsTitle}>Phone Number</Title>
+                <Text style={styles.detailsText}>{owner.phone}</Text>
+              </Surface>
+            </>
+          )}
 
-          <Surface style={styles.detailsSurface}>
-            <Title style={styles.detailsTitle}>Address</Title>
-            <Text style={styles.detailsText}>
-              {owner.street}, {owner.suburb}
-            </Text>
-            <Text style={styles.detailsText}>{owner.countryCode}</Text>
-          </Surface>
-
-          <Surface style={styles.detailsSurface}>
-            <Title style={styles.detailsTitle}>Phone Number</Title>
-            <Text style={styles.detailsText}>{owner.phone}</Text>
-          </Surface>
-
-          <Surface style={styles.detailsSurface}>
-            <Title style={styles.detailsTitle}>Vet Clinic</Title>
-            <Text style={styles.detailsText}>{vet.name}</Text>
-            <Text style={styles.detailsText}>
-              {vet.street}, {vet.suburb}
-            </Text>
-            <Text style={styles.detailsText}>{vet.countryCode}</Text>
-          </Surface>
+          {Object.keys(vet).length !== 0 && (
+            <Surface style={styles.detailsSurface}>
+              <Title style={styles.detailsTitle}>Vet Clinic</Title>
+              <Text style={styles.detailsText}>{vet.name}</Text>
+              <Text style={styles.detailsText}>
+                {vet.street}, {vet.suburb}
+              </Text>
+              <Text style={styles.detailsText}>{vet.countryCode}</Text>
+            </Surface>
+          )}
         </View>
       </View>
     );

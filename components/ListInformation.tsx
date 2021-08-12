@@ -9,7 +9,7 @@ import capitilize from '../utils/capitlize';
 
 interface FoodType {
   brand: string;
-  duration: string;
+  duration: number;
   type: string;
 }
 
@@ -31,16 +31,18 @@ const ListInformation: FC<InfoType> = ({ content, title }) => {
       <View style={styles.container}>
         <Text style={styles.type}>{capitilize(type)}</Text>
         <Text style={styles.information}>Brand: {capitilize(brand)}</Text>
-        <Text style={styles.information}>Duration: {capitilize(duration)}</Text>
+        <Text style={styles.information}>Duration: {duration} times a day</Text>
       </View>
     );
   }
 
-  const { name, dose, action }: MedicationType = content;
+  const { action, dose, duration, name }: MedicationType = content;
   return (
     <View style={styles.container}>
       <Text style={styles.type}>{capitilize(name)}</Text>
-      <Text style={styles.information}>Dose: {capitilize(dose)}</Text>
+      <Text style={styles.information}>
+        Dose: {dose} a {duration}
+      </Text>
       <Text style={styles.information}>How: {capitilize(action)}</Text>
     </View>
   );

@@ -48,7 +48,7 @@ const App = () => {
       });
   };
 
-  const getPetData = async (ownerID: any) => {
+  const getPetData = (ownerID: any) => {
     const petsArray: any = [];
     db.collection('animals')
       .where('owner', '==', `${ownerID}`)
@@ -78,13 +78,13 @@ const App = () => {
       .then((doc) => {
         if (doc.exists) {
           const res = doc.data();
-          setOwnerData(res);
-          if (ownerData) {
-            const clinic = ownerData.vetClinic;
+          if (res) {
+            const clinic = res.vetClinic;
             // Fetch clinic and pet data
             getVetData(clinic);
             getPetData(ownerID);
           }
+          setOwnerData(res);
         } else {
           console.log('No owner document exists');
         }

@@ -7,7 +7,6 @@ import { Avatar, Button, List } from 'react-native-paper';
 const AnimalsScreen = ({ navigation }) => {
   const data = React.useContext(AppContext);
   const { pets } = data;
-  console.log(pets);
 
   return (
     <View style={styles.container}>
@@ -42,7 +41,12 @@ const AnimalsScreen = ({ navigation }) => {
                 style={styles.buttonList}
                 contentStyle={styles.buttonListContentStyle}
                 labelStyle={styles.buttonListText}
-                onPress={() => navigation.navigate('Profile', { id: pet.id })}
+                onPress={() =>
+                  navigation.navigate('Profile', {
+                    id: pet.id,
+                    animal: pet.name,
+                  })
+                }
               >
                 View
               </Button>
