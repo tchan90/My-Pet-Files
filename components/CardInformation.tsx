@@ -36,14 +36,10 @@ const CardInformation: FC<CardType> = ({ data, icon, title, type }) => {
               return <ListInformation key={i} content={d} title={title} />;
             })}
 
-          {/* {data.length !== 0 &&
-            data.map((content: object, i) => {
-              return <ListInformation content={content} title={title} key={i} />;
-            })} */}
-          {/* {type === 'dot' &&
+          {type === 'dot' &&
             data.map((content: string) => {
               return <DotInformation content={content} />;
-            })} */}
+            })}
         </Card.Content>
       </Card>
     );

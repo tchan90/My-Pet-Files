@@ -8,7 +8,7 @@ import AppContext from '../AppContext';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, ScrollView } from 'react-native';
 import { View } from 'react-native';
-import { Appbar, Menu } from 'react-native-paper';
+import { Appbar, Menu, Text } from 'react-native-paper';
 
 import CardInformation from '../components/CardInformation';
 
@@ -20,6 +20,7 @@ const ProfileScreen = ({ route, navigation }) => {
   const [petData, setPetData] = React.useState({});
   const [dietData, setDietData] = React.useState([]);
   const [drugData, setDrugData] = React.useState([]);
+  const [notesData, setNotesData] = React.useState({});
   const _goBack = () => navigation.goBack();
   const _handleMore = () => setVisible(!visible);
   const _closeMenu = () => setVisible(!visible);
@@ -83,54 +84,28 @@ const ProfileScreen = ({ route, navigation }) => {
       });
   };
 
+  const getNotesData = async () => {
+    db.collection('notes')
+      .where('animal', '==', `${id}`)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          const res = doc.data();
+          setNotesData(res);
+        });
+      })
+      .catch((err) => {
+        console.error('Error getting pet document', err);
+      });
+  };
+
   React.useEffect(() => {
     getPetData();
     getDietData();
     getDrugData();
+    getNotesData();
   }, []);
-
-  const dummyInfo = {
-    general: {
-      species: 'cat',
-      dob: '02/08/2019',
-      age: '1 year 6 months',
-      address: '111 Cat Road, Whiskers Hills',
-    },
-    diet: [
-      {
-        type: 'Patte wet food',
-        duration: 'Once a day',
-        brand: 'Dine',
-      },
-      {
-        type: 'Indoor dry food',
-        duration: 'Twice a day',
-        brand: 'Royal Canin',
-      },
-    ],
-    drugs: {
-      parasiteControl: [
-        {
-          name: 'Advocate',
-          dose: 'Once a month',
-          action: 'Through skin',
-        },
-      ],
-      medication: [
-        {
-          name: 'Antibiotics',
-          dose: 'Three times a day for 14 days',
-          action: 'Orally',
-        },
-      ],
-    },
-    notes: [
-      'Needs training',
-      'Will play and scratch bite',
-      'History of cat flu at the shelter',
-    ],
-    image: '',
-  };
 
   const parasiteMeds = drugData.map((drug) => {
     if (drug.parasiteControl) {
@@ -145,6 +120,8 @@ const ProfileScreen = ({ route, navigation }) => {
     }
     return null;
   });
+
+  const notes = notesData.note;
 
   const listViewData = [
     {
@@ -163,7 +140,7 @@ const ProfileScreen = ({ route, navigation }) => {
       data: medication,
     },
   ];
-
+  const dataPresent = dietData || parasiteMeds || medication || notes;
   return (
     <>
       <StatusBar style="light" />
@@ -188,27 +165,34 @@ const ProfileScreen = ({ route, navigation }) => {
       </Appbar.Header>
       <ScrollView>
         <View style={styles.container}>
-          <CardInformation
-            title="General Information"
-            icon="cat"
-            data={petData}
-            type="simple"
-          />
-          {listViewData.map((listData, key) => (
-            <CardInformation
-              key={key}
-              title={listData.title}
-              icon={listData.icon}
-              data={listData.data}
-              type="list"
-            />
-          ))}
-          {/* <CardInformation
-            title="Notes"
-            icon="note-text-outline"
-            data={notes}
-            type="dot"
-          /> */}
+          {dataPresent ? (
+            <>
+              {' '}
+              <CardInformation
+                title="General Information"
+                icon="cat"
+                data={petData}
+                type="simple"
+              />
+              {listViewData.map((listData, key) => (
+                <CardInformation
+                  key={key}
+                  title={listData.title}
+                  icon={listData.icon}
+                  data={listData.data}
+                  type="list"
+                />
+              ))}
+              <CardInformation
+                title="Notes"
+                icon="note-text-outline"
+                data={notes}
+                type="dot"
+              />
+            </>
+          ) : (
+            <Text>No data present!</Text>
+          )}
         </View>
       </ScrollView>
     </>
