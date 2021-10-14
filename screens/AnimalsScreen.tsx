@@ -4,6 +4,8 @@ import { StatusBar } from 'expo-status-bar';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import { Avatar, Button, List } from 'react-native-paper';
 
+import AddAnimalScreen from './forms/add/AddAnimalScreen';
+
 const AnimalsScreen = ({ navigation }) => {
   const data = React.useContext(AppContext);
   const { pets } = data;
@@ -18,7 +20,7 @@ const AnimalsScreen = ({ navigation }) => {
           icon="plus"
           style={styles.button}
           labelStyle={styles.buttonText}
-          onPress={() => {}}
+          onPress={() => navigation.navigate('AddAnimalScreen')}
         >
           Add Pet
         </Button>
@@ -29,13 +31,10 @@ const AnimalsScreen = ({ navigation }) => {
             key={pet.id}
             title={pet.name}
             titleStyle={styles.listItem}
-            left={(props) => (
-              <Avatar.Image
-                size={45}
-                source={require('../assets/cat-avatar.jpeg')}
-              />
+            left={() => (
+              <Avatar.Image size={45} source={{ uri: `${pet.image}` }} />
             )}
-            right={(props) => (
+            right={() => (
               <Button
                 mode="outlined"
                 style={styles.buttonList}

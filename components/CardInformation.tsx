@@ -8,14 +8,14 @@ import ListInformation from '../components/ListInformation';
 import DotInformation from '../components/DotInformation';
 
 interface CardType {
-  data: object | Array<string>;
+  data: object | string[];
   icon: string;
   title: string;
   type: string;
 }
 
 const CardInformation: FC<CardType> = ({ data, icon, title, type }) => {
-  if (data[0] !== null) {
+  if (data.length !== 0) {
     return (
       <Card elevation={2} style={styles.generalInformation}>
         <Card.Title
@@ -37,8 +37,8 @@ const CardInformation: FC<CardType> = ({ data, icon, title, type }) => {
             })}
 
           {type === 'dot' &&
-            data.map((content: string) => {
-              return <DotInformation content={content} />;
+            data.map((content: string, i: any) => {
+              return <DotInformation content={content} key={i} />;
             })}
         </Card.Content>
       </Card>

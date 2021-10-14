@@ -6,7 +6,7 @@ import { db } from '../configs/firebase';
 import AppContext from '../AppContext';
 
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet, ScrollView, Image } from 'react-native';
 import { View } from 'react-native';
 import { Appbar, Menu, Text } from 'react-native-paper';
 
@@ -21,6 +21,8 @@ const ProfileScreen = ({ route, navigation }) => {
   const [dietData, setDietData] = React.useState([]);
   const [drugData, setDrugData] = React.useState([]);
   const [notesData, setNotesData] = React.useState({});
+  const [image, setImage] = React.useState('');
+
   const _goBack = () => navigation.goBack();
   const _handleMore = () => setVisible(!visible);
   const _closeMenu = () => setVisible(!visible);
@@ -39,6 +41,7 @@ const ProfileScreen = ({ route, navigation }) => {
             Owner: owner ? `${owner.firstName} ${owner.lastName}` : '',
           };
           setPetData(generalInfo);
+          setImage(res.image);
         } else {
           console.log('No pet document exists');
         }
@@ -107,21 +110,16 @@ const ProfileScreen = ({ route, navigation }) => {
     getNotesData();
   }, []);
 
-  const parasiteMeds = drugData.map((drug) => {
+  const parasiteMeds = [];
+  const medication = [];
+  drugData.map((drug) => {
     if (drug.parasiteControl) {
-      return drug;
+      parasiteMeds.push(drug);
     }
-    return null;
+    medication.push(drug);
   });
 
-  const medication = drugData.map((med) => {
-    if (med.medication) {
-      return med;
-    }
-    return null;
-  });
-
-  const notes = notesData.note;
+  const notes = notesData.note || [];
 
   const listViewData = [
     {
@@ -167,7 +165,6 @@ const ProfileScreen = ({ route, navigation }) => {
         <View style={styles.container}>
           {dataPresent ? (
             <>
-              {' '}
               <CardInformation
                 title="General Information"
                 icon="cat"
@@ -188,6 +185,10 @@ const ProfileScreen = ({ route, navigation }) => {
                 icon="note-text-outline"
                 data={notes}
                 type="dot"
+              />
+              <Image
+                source={{ uri: `${image}` }}
+                style={{ width: '100%', height: 400 }}
               />
             </>
           ) : (

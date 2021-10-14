@@ -1,5 +1,6 @@
 import * as Linking from 'expo-linking';
 
+// Define screen titles
 export default {
   prefixes: [Linking.makeUrl('/')],
   config: {
