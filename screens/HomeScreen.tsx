@@ -1,3 +1,4 @@
+// Login View
 import * as React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Image, Platform, StyleSheet, View } from 'react-native';

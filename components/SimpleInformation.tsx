@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
-
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 
 import capitilize from '../utils/capitlize';

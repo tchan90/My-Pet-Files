@@ -1,15 +1,13 @@
+// Individial animal view
 import * as React from 'react';
 import 'firebase/firestore';
 import { format } from 'date-fns';
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, ScrollView, Image, View } from 'react-native';
+import { Appbar, Menu, Text } from 'react-native-paper';
 
 import { db } from '../configs/firebase';
 import AppContext from '../AppContext';
-
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, ScrollView, Image } from 'react-native';
-import { View } from 'react-native';
-import { Appbar, Menu, Text } from 'react-native-paper';
-
 import CardInformation from '../components/CardInformation';
 
 const ProfileScreen = ({ route, navigation }) => {

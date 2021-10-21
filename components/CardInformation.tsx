@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 import { StyleSheet } from 'react-native';
-
 import { Avatar, Card, Divider } from 'react-native-paper';
 
 import SimpleInformation from '../components/SimpleInformation';

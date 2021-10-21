@@ -40,9 +40,9 @@ const UserScreen = ({ navigation }) => {
     setStep(step + 1);
     setFormValues(data);
   };
-  // console.log(formValues);
+  console.log(formValues);
 
-  // console.log(errors);
+  console.log(errors);
 
   const handleTitle = () => {
     switch (step) {

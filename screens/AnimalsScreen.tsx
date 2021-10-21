@@ -1,3 +1,4 @@
+// List view for all animals
 import * as React from 'react';
 import AppContext from '../AppContext';
 import { StatusBar } from 'expo-status-bar';

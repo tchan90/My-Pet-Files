@@ -1,8 +1,7 @@
+// Owner information view
 import * as React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet } from 'react-native';
-import AppContext from '../AppContext';
-
 import { Platform, View } from 'react-native';
 import {
   Button,
@@ -13,6 +12,8 @@ import {
   ActivityIndicator,
   Colors,
 } from 'react-native-paper';
+
+import AppContext from '../AppContext';
 
 export default function UserScreen() {
   const data = React.useContext(AppContext);
