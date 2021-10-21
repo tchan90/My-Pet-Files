@@ -5,3 +5,4 @@
 - React Native / Expo
 - React Native Paper (UI)
 - Firestore
+- React Hook Form (Form component)
