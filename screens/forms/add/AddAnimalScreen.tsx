@@ -1,153 +1,162 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
-
-import { View } from 'react-native';
-import { Text, Button, TextInput } from 'react-native-paper';
+import { Appbar, Text, Button, TextInput } from 'react-native-paper';
 import DropDown from 'react-native-paper-dropdown';
 import { Calendar } from 'react-native-calendars';
 
-export default function UserScreen() {
+const speciesList = [
+  {
+    label: 'Dog',
+    value: 'dog',
+  },
+  {
+    label: 'Cat',
+    value: 'cat',
+  },
+];
+
+const UserScreen = ({ navigation }) => {
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitted },
+    formState: { errors },
   } = useForm();
-  // const [value, setValue] = React.useState('');
-  const [showDropDown, setShowDropDown] = React.useState(false);
-  const [formValues, setFormValues] = React.useState({});
-  const [date, setDate] = React.useState('');
+  const [step, setStep] = useState(1);
+  const [showDropDown, setShowDropDown] = useState(false);
+  const [formValues, setFormValues] = useState({});
+  const [date, setDate] = useState('');
+
+  const goBack = () => {
+    if (step > 1) {
+      setStep(step - 1);
+    } else {
+      navigation.navigate('Root', { screen: 'animals' });
+    }
+  };
 
   const onSubmit = (data) => {
+    setStep(step + 1);
     setFormValues(data);
   };
-  console.log(formValues);
+  // console.log(formValues);
 
-  const formValue = ['species', 'name', 'dob'];
+  // console.log(errors);
 
-  const speciesList = [
-    {
-      label: 'Dog',
-      value: 'dog',
-    },
-    {
-      label: 'Cat',
-      value: 'cat',
-    },
-  ];
-  console.log(errors);
+  const handleTitle = () => {
+    switch (step) {
+      case 1:
+        return 'Select species';
+      case 2:
+        return 'Name';
+      case 3:
+        return 'Date of Birth';
+      default:
+        return;
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      <StatusBar style="dark" />
-      <View style={styles.header}>
-        <Text style={styles.heading}>Add a pet</Text>
-      </View>
-      {!formValues.species && (
-        <View style={styles.formContainer}>
-          <Controller
-            control={control}
-            rules={{
-              required: true,
-            }}
-            render={({ field: { value, onChange } }) => (
-              <DropDown
-                label={'Species'}
-                mode={'outlined'}
-                visible={showDropDown}
-                showDropDown={() => setShowDropDown(true)}
-                onDismiss={() => setShowDropDown(false)}
-                value={value}
-                setValue={onChange}
-                list={speciesList}
-              />
-            )}
-            name="species"
-            defaultValue=""
-          />
-        </View>
-      )}
-
-      {formValues.species && !formValues.name && (
-        <View style={styles.formContainer}>
-          <Controller
-            control={control}
-            rules={{
-              required: true,
-            }}
-            render={({ field: { value, onChange } }) => (
-              <TextInput label="Name" value={value} onChangeText={onChange} />
-            )}
-            name="name"
-            defaultValue=""
-          />
-        </View>
-      )}
-
-      {formValues.name && (
-        <>
-          <Text style={styles.label}>Date of Birth</Text>
-          <Controller
-            control={control}
-            rules={{
-              required: true,
-            }}
-            render={({ field: { onChange } }) => (
-              <Calendar
-                onDayPress={(day) => {
-                  setDate(day.dateString);
-                  onChange(day.dateString);
-                }}
-                markedDates={{
-                  [date]: {
-                    selected: true,
-                    selectedColor: '#6a00ff',
-                    selectedTextColor: '#ffffff',
-                  },
-                }}
-                monthFormat={'MMM yyyy'}
-                hideExtraDays={true}
-                firstDay={1}
-                onPressArrowLeft={(subtractMonth) => subtractMonth()}
-                onPressArrowRight={(addMonth) => addMonth()}
-                enableSwipeMonths={true}
-              />
-            )}
-            name="dob"
-            defaultValue=""
-          />
-        </>
-      )}
-
-      <View style={styles.buttonContainer}>
-        <Button mode="contained" upperCase onPress={handleSubmit(onSubmit)}>
-          Next
-        </Button>
-        {(errors.species || errors.name || errors.dob) && (
-          <Text style={styles.errorText}>This is required.</Text>
+    <>
+      <Appbar.Header>
+        <Appbar.BackAction onPress={goBack} />
+        <Appbar.Content title={handleTitle()} subtitle="Add Pet" />
+      </Appbar.Header>
+      <View style={styles.container}>
+        <StatusBar style="light" />
+        {step === 1 && (
+          <View style={styles.formContainer}>
+            <Controller
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { value, onChange } }) => (
+                <DropDown
+                  label={'Species'}
+                  mode={'outlined'}
+                  visible={showDropDown}
+                  showDropDown={() => setShowDropDown(true)}
+                  onDismiss={() => setShowDropDown(false)}
+                  value={value}
+                  setValue={onChange}
+                  list={speciesList}
+                />
+              )}
+              name="species"
+              defaultValue=""
+            />
+          </View>
         )}
-      </View>
-    </View>
-  );
-}
 
+        {step === 2 && (
+          <View style={styles.formContainer}>
+            <Controller
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { value, onChange } }) => (
+                <TextInput label="Name" value={value} onChangeText={onChange} />
+              )}
+              name="name"
+              defaultValue=""
+            />
+          </View>
+        )}
+
+        {step === 3 && (
+          <View style={styles.formContainer}>
+            <Controller
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { onChange } }) => (
+                <Calendar
+                  onDayPress={(day) => {
+                    setDate(day.dateString);
+                    onChange(day.dateString);
+                  }}
+                  markedDates={{
+                    [date]: {
+                      selected: true,
+                      selectedColor: '#6a00ff',
+                      selectedTextColor: '#ffffff',
+                    },
+                  }}
+                  monthFormat={'MMM yyyy'}
+                  hideExtraDays={true}
+                  firstDay={1}
+                  onPressArrowLeft={(subtractMonth) => subtractMonth()}
+                  onPressArrowRight={(addMonth) => addMonth()}
+                  enableSwipeMonths={true}
+                />
+              )}
+              name="dob"
+              defaultValue=""
+            />
+          </View>
+        )}
+
+        <View style={styles.buttonContainer}>
+          <Button mode="contained" onPress={handleSubmit(onSubmit)}>
+            Next
+          </Button>
+          {(errors.species || errors.name || errors.dob) && (
+            <Text style={styles.errorText}>This is required.</Text>
+          )}
+        </View>
+      </View>
+    </>
+  );
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 50,
     paddingHorizontal: 20,
     backgroundColor: 'white',
-  },
-  header: {
-    flexDirection: 'row',
-    marginTop: 50,
-    marginBottom: 20,
-    justifyContent: 'space-between',
-  },
-  heading: {
-    fontSize: 28,
-    fontWeight: 'bold',
   },
   formContainer: {
     marginTop: 100,
@@ -169,3 +178,4 @@ const styles = StyleSheet.create({
     color: 'grey',
   },
 });
+export default UserScreen;

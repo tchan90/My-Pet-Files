@@ -188,7 +188,7 @@ const ProfileScreen = ({ route, navigation }) => {
               />
               <Image
                 source={{ uri: `${image}` }}
-                style={{ width: '100%', height: 400 }}
+                style={{ width: '100%', height: 400, borderRadius: 5 }}
               />
             </>
           ) : (

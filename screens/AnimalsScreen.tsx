@@ -4,8 +4,6 @@ import { StatusBar } from 'expo-status-bar';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import { Avatar, Button, List } from 'react-native-paper';
 
-import AddAnimalScreen from './forms/add/AddAnimalScreen';
-
 const AnimalsScreen = ({ navigation }) => {
   const data = React.useContext(AppContext);
   const { pets } = data;
