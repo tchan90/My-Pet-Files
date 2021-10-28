@@ -35,7 +35,6 @@ const AnimalsScreen = ({ navigation }) => {
             )}
             right={() => (
               <Button
-                mode="outlined"
                 style={styles.buttonList}
                 contentStyle={styles.buttonListContentStyle}
                 labelStyle={styles.buttonListText}
@@ -96,7 +95,7 @@ const styles = StyleSheet.create({
   },
   buttonListText: {
     color: '#4828ff',
-    fontSize: 11,
+    fontSize: 13,
     textAlign: 'center',
   },
   listItem: {
