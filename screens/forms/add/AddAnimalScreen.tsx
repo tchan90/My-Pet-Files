@@ -1,8 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View } from 'react-native';
+import {
+  Keyboard,
+  TouchableWithoutFeedback,
+  StyleSheet,
+  View,
+  Platform,
+  Image,
+} from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import {
+  Avatar,
   Appbar,
   Text,
   Button,
@@ -11,6 +19,7 @@ import {
 } from 'react-native-paper';
 import DropDown from 'react-native-paper-dropdown';
 import { Calendar } from 'react-native-calendars';
+import * as ImagePicker from 'expo-image-picker';
 
 const speciesList = [
   {
@@ -22,6 +31,18 @@ const speciesList = [
     value: 'cat',
   },
 ];
+
+const durationText = (duration) => {
+  if (duration === '1') {
+    return 'Once a day';
+  }
+  if (duration === '2') {
+    return 'Twice a day';
+  }
+  if (duration === '3') {
+    return 'More than 3 times a day';
+  }
+};
 
 const UserScreen = ({ navigation }) => {
   const {
@@ -37,7 +58,34 @@ const UserScreen = ({ navigation }) => {
   const [showDropDown, setShowDropDown] = useState(false);
   const [formValues, setFormValues] = useState({});
   const [date, setDate] = useState('');
-  const [diet, setDiet] = useState([]);
+  const [image, setImage] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== 'web') {
+        const { status } =
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+          alert('Sorry, we need camera roll permissions to make this work!');
+        }
+      }
+    })();
+  }, []);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
+  };
 
   const goBack = () => {
     if (step > 1) {
@@ -55,37 +103,31 @@ const UserScreen = ({ navigation }) => {
         species: data.species,
         dob: data.dob,
       },
-      diet: {
-        brand: data.brand,
-        duration: data.foodDuration,
-        type: data.foodType,
-      },
+      diet: [
+        {
+          type: data.foodType,
+          brand: data.brand,
+          duration: data.foodDuration,
+        },
+      ],
     });
   };
+  console.log(formValues);
 
-  const submitMoreDiet = (data) => {
-    setFormValues({
-      ...data,
-      diet: {
-        ...data.diet,
-        brand: data.brand,
-        duration: data.foodDuration,
-        type: data.foodType,
-      },
-    });
-    reset({
-      diet: {
-        brand: '',
-        duration: '',
-        type: '',
-      },
-      keepDirty: true,
-    });
-  };
+  // const submitMoreDiet = (data) => {
+  //   const newList = diet.concat({
+  //     brand: data.brand,
+  //     duration: data.foodDuration,
+  //     type: data.foodType,
+  //   });
 
-  console.log('formValues', formValues);
-
-  console.log('errors', errors);
+  //   setDiet(newList);
+  //   resetDataList({
+  //     foodType: '',
+  //     brand: '',
+  //     foodDuration: '',
+  //   });
+  // };
 
   const handleTitle = () => {
     switch (step) {
@@ -97,12 +139,41 @@ const UserScreen = ({ navigation }) => {
         return 'Date of Birth';
       case 4:
         return 'Diet';
+      case 5:
+        return 'Upload Image';
       default:
         return;
     }
   };
 
-  console.log('dirtyFields', dirtyFields);
+  const renderFoodItem = ({ item }) => (
+    <View style={styles.dietContent}>
+      <View style={styles.dietText}>
+        <View style={styles.dietPill}>
+          <Text style={styles.dietHeading}>Type</Text>
+        </View>
+        <Text> {item.foodType}</Text>
+      </View>
+
+      {item.brand ? (
+        <View style={styles.dietText}>
+          <View style={styles.dietPill}>
+            <Text style={styles.dietHeading}>Brand</Text>
+          </View>
+          <Text> {item.brand}</Text>
+        </View>
+      ) : null}
+
+      <View style={styles.dietText}>
+        <View style={styles.dietPill}>
+          <Text style={styles.dietHeading}>Duration</Text>
+        </View>
+        <Text> {durationText(item.foodDuration)}</Text>
+      </View>
+    </View>
+  );
+
+  console.log('errors', errors);
 
   return (
     <>
@@ -188,75 +259,83 @@ const UserScreen = ({ navigation }) => {
         )}
 
         {step === 4 && (
-          <View style={styles.formContainer}>
-            {dirtyFields.foodType && dirtyFields.foodDuration && (
-              <View>
-                <Text>{formValues.diet.type}</Text>
-                {formValues.diet.brand !== '' && (
-                  <Text>{formValues.diet.brand}</Text>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.formContainer}>
+              <Controller
+                control={control}
+                rules={{
+                  required: true,
+                }}
+                render={({ field: { value, onChange } }) => (
+                  <TextInput
+                    label="Add food type"
+                    value={value || ''}
+                    onChangeText={onChange}
+                  />
                 )}
-                <Text>{formValues.diet.duration}</Text>
-              </View>
-            )}
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({ field: { value, onChange } }) => (
-                <TextInput
-                  label="Add food type"
-                  value={value}
-                  onChangeText={onChange}
-                />
-              )}
-              name="foodType"
-              defaultValue=""
-            />
-            <Controller
-              control={control}
-              render={({ field: { value, onChange } }) => (
-                <TextInput
-                  style={styles.formInput}
-                  label="Optional: Brand Name"
-                  value={value}
-                  onChangeText={onChange}
-                />
-              )}
-              name="brand"
-              defaultValue=""
-            />
-            <View style={styles.radioButtonsGroup}>
+                name="foodType"
+                defaultValue=""
+              />
               <Controller
                 control={control}
                 render={({ field: { value, onChange } }) => (
-                  <RadioButton.Group onValueChange={onChange} value={value}>
-                    <View style={styles.radioButtons}>
-                      <RadioButton value="1" />
-                      <Text>Once a day</Text>
-                    </View>
-                    <View style={styles.radioButtons}>
-                      <RadioButton value="2" />
-                      <Text>Twice a day</Text>
-                    </View>
-                    <View style={styles.radioButtons}>
-                      <RadioButton value="3" />
-                      <Text> More than 3 times a day </Text>
-                    </View>
-                  </RadioButton.Group>
+                  <TextInput
+                    style={styles.formInput}
+                    label="Optional: Brand Name"
+                    value={value || ''}
+                    onChangeText={onChange}
+                  />
                 )}
-                name="foodDuration"
+                name="brand"
                 defaultValue=""
               />
+              <View style={styles.radioButtonsGroup}>
+                <Controller
+                  control={control}
+                  rules={{
+                    required: true,
+                  }}
+                  render={({ field: { value, onChange } }) => (
+                    <RadioButton.Group onValueChange={onChange} value={value}>
+                      <View style={styles.radioButtons}>
+                        <RadioButton value="1" />
+                        <Text>Once a day</Text>
+                      </View>
+                      <View style={styles.radioButtons}>
+                        <RadioButton value="2" />
+                        <Text>Twice a day</Text>
+                      </View>
+                      <View style={styles.radioButtons}>
+                        <RadioButton value="3" />
+                        <Text> More than 3 times a day </Text>
+                      </View>
+                    </RadioButton.Group>
+                  )}
+                  name="foodDuration"
+                  defaultValue=""
+                />
+              </View>
             </View>
+          </TouchableWithoutFeedback>
+        )}
 
-            <Button
-              style={styles.addMoreButton}
-              mode="contained"
-              onPress={handleSubmit(submitMoreDiet)}
-            >
-              + Add More
-            </Button>
+        {step === 5 && (
+          <View style={styles.formContainer}>
+            <View style={styles.imageFormContainer}>
+              {image ? (
+                <Image source={{ uri: image }} style={styles.avatarImage} />
+              ) : (
+                <Avatar.Icon icon={'camera'} style={styles.cameraIcon} />
+              )}
+              <Button
+                mode="outlined"
+                onPress={pickImage}
+                style={styles.uploadButton}
+              >
+                Choose a photo of your pet!
+              </Button>
+              <Text>If you want to choose one later, just click 'Next'</Text>
+            </View>
           </View>
         )}
 
@@ -267,8 +346,8 @@ const UserScreen = ({ navigation }) => {
           {(errors.species ||
             errors.name ||
             errors.dob ||
-            errors.food ||
-            errors.foodDuration) && (
+            errors.foodDuration ||
+            errors.foodType) && (
             <Text style={styles.errorText}>This is required.</Text>
           )}
         </View>
@@ -313,6 +392,62 @@ const styles = StyleSheet.create({
   },
   addMoreButton: {
     marginTop: 20,
+  },
+  // Used for food list
+  dietContent: {
+    width: '100%',
+    marginTop: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    borderWidth: 2,
+    borderRadius: 5,
+    borderColor: 'lightgrey',
+  },
+  dietText: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 5,
+    marginLeft: 5,
+  },
+  dietPill: {
+    backgroundColor: 'lightgrey',
+    borderRadius: 20,
+    paddingVertical: 3,
+    paddingHorizontal: 8,
+  },
+  dietHeading: {
+    fontWeight: 'bold',
+    color: 'grey',
+  },
+  avatarImage: {
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    alignItems: 'center',
+  },
+  imageFormContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  cameraIcon: {
+    height: 200,
+    width: 200,
+    backgroundColor: 'grey',
+    overflow: 'hidden',
+    borderRadius: 100,
+  },
+  uploadButton: {
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  //
+  foodAddedPrompt: {
+    marginTop: 25,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    borderWidth: 3,
+    borderColor: 'lightgrey',
   },
 });
 export default UserScreen;
