@@ -1,15 +1,32 @@
 // Login View
-import * as React from 'react';
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Image, Platform, StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
+import Login from './forms/authorization/Login';
+import Register from './forms/authorization/Register';
 
 const HomeScreen = ({ navigation }) => {
-  const registered = false; // TODO: function to detect if user registered or not
+  const [loginModalVisible, setLoginModalVisible] = useState(false);
+  const [registerModalVisible, setRegisterModalVisible] = useState(false);
+
+  const closeLoginModal = () => {
+    setLoginModalVisible(false);
+  };
+  const closeRegisterModal = () => {
+    setRegisterModalVisible(false);
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
       <Text style={styles.heading}>My Pet Files</Text>
+      <Login modalVisible={loginModalVisible} closeModal={closeLoginModal} />
+      <Register
+        modalVisible={registerModalVisible}
+        closeModal={closeRegisterModal}
+      />
+
       <Image
         style={styles.homeImage}
         source={require('../assets/PetFilesImage.png')}
@@ -20,20 +37,21 @@ const HomeScreen = ({ navigation }) => {
         style={styles.button}
         labelStyle={styles.buttonText}
         contentStyle={styles.buttonBody}
-        onPress={() => {}}
+        onPress={() => setLoginModalVisible(true)}
       >
         Login
       </Button>
-      {/* <Button
+      <Button
         mode="contained"
-        icon="call-made"
+        icon="account-circle"
         style={styles.button}
         labelStyle={styles.buttonText}
         contentStyle={styles.buttonBody}
-        onPress={() => navigation.navigate('Animals')}
+        // onPress={() => navigation.navigate('Animals')}
+        onPress={() => setRegisterModalVisible(true)}
       >
-        {registered ? 'Register' : 'Enter'}
-      </Button> */}
+        Register
+      </Button>
     </View>
   );
 };
@@ -49,6 +67,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontFamily: Platform.OS === 'ios' ? 'Cochin' : 'serif',
   },
+
   homeImage: {
     width: '90%',
     height: '50%',
@@ -56,7 +75,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: 250,
-    marginTop: Platform.OS === 'web' ? 12 : 0,
+    marginTop: 12,
   },
   buttonBody: {
     paddingVertical: 6,

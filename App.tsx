@@ -99,7 +99,7 @@ const App = () => {
   }, []);
 
   const hasOpened = true; // TODO: function to detect that user has app running in bg or not
-  if (!hasOpened) {
+  if (hasOpened) {
     return (
       <AppProvider petsData={petsData} ownerData={ownerData} vetData={vetData}>
         <PaperProvider>

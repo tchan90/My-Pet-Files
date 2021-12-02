@@ -48,8 +48,7 @@ const UserScreen = ({ navigation }) => {
   const {
     control,
     handleSubmit,
-    formState: { dirtyFields, errors },
-    reset,
+    formState: { errors },
   } = useForm({
     mode: 'onSubmit',
     reValidateMode: 'onChange',
@@ -113,21 +112,6 @@ const UserScreen = ({ navigation }) => {
     });
   };
   console.log(formValues);
-
-  // const submitMoreDiet = (data) => {
-  //   const newList = diet.concat({
-  //     brand: data.brand,
-  //     duration: data.foodDuration,
-  //     type: data.foodType,
-  //   });
-
-  //   setDiet(newList);
-  //   resetDataList({
-  //     foodType: '',
-  //     brand: '',
-  //     foodDuration: '',
-  //   });
-  // };
 
   const handleTitle = () => {
     switch (step) {
